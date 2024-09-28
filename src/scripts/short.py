@@ -87,7 +87,7 @@ vid_tags_str = llm.generate_reddit_video_tags(REDDIT_DATA["subreddit"], REDDIT_D
 vid_tags = vid_tags_str.split(",")
 
 Info("Saving video meta")
-generate_video_meta(NAME, vid_form, out.duration, False, REDDIT_DATA["permalink"], vid_title, vid_desc, vid_tags)
+generate_video_meta(NAME, vid_form, out.duration, False, REDDIT_DATA["url"], vid_title, vid_desc, vid_tags)
 
 Info("Done!")
 print("File name:  ", NAME)
@@ -95,5 +95,5 @@ print("Title:      ", vid_title)
 print("Description:", vid_desc)
 print("Tags:       ", vid_tags_str)
 print("Duration:   ", out.duration)
-print("Post link:  ", REDDIT_DATA["permalink"])
+print("Post link:  ", REDDIT_DATA["url"])
 print("file://///wsl.localhost/Ubuntu/home/vizn3r/dev/yt-automation/videos/output/" + NAME + ".mp4")
