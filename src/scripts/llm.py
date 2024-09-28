@@ -4,6 +4,7 @@ from llama_cpp import LLAMA_DEFAULT_SEED, LLAMA_POOLING_TYPE_UNSPECIFIED, LLAMA_
 from typing import Any
 import os
 from utils import Except, Info, Error, END
+import warnings
 
 if __name__ == "__main__":
     Error("This script is not meant to run standalone")
@@ -11,15 +12,17 @@ if __name__ == "__main__":
 
 LLM_PATH = os.environ["LLM_PATH"] or "../../media/llm/model.gguf"
 
+warnings.filterwarnings("ignore", category=FutureWarning)
+
 class LLMContext:
     def __init__(self) -> None:
         pass
 
-    def load_model(self) -> str:
+    def load_model(self):
         Info("Loading model")
         if self.llama != None:
             Info("Model already loaded")
-            return "model already loaded"
+            return self
         try:
             self.llama = Llama(
                 model_path=self.params["model_name"],
@@ -61,9 +64,9 @@ class LLMContext:
             )
         except Exception as e:
             Except(e, "Failed loading model")
-            return "failed loading model"
+            return None
         Info("Loaded model '", self.params["model_name"], "'")
-        return "loaded model"
+        return self
 
     def chat(self) -> CreateChatCompletionResponse | None:
         if self.llama == None:
@@ -181,63 +184,63 @@ class LLMContext:
         "history": [],
     }
 
+        
+llm = LLMContext().load_model()
+class RedditVideo:
+    def title(subreddit, post_title, post_content):
+        message = [
+            {
+                "role": "user",
+                "content": f"Generate a catchy, SEO-optimized, and clickbait-style video title based on the subreddit '{subreddit}', post title '{post_title}', and post content '{post_content}'. The title must be engaging and under 100 characters in length. Respond with ONLY one title and no additional text."
+            }
+        ]
+        llm.set_param("messages", message)
+        llm.set_param("ctx_size", len(message[0]["content"]) + llm.params["ctx_size"])
+        out = llm.chat()
+        if out == None or out["choices"].__len__() == 0 or out["choices"][0]["message"] == None:
+            return "There is no response"
+        msg = out["choices"][0]["message"]["content"]
+        if len(msg) >= 100:
+            Info("Video title is too long, redoing it recursively")
+            msg = RedditVideo.title(subreddit, post_title, post_content)
+        Info("Video title:", END, msg)
+        return msg
 
-def generate_reddit_video_title(subreddit, post_title, post_content):
-    llm = LLMContext()
-    llm.load_model()
-    message = [
-        {
-            "role": "user",
-            "content": f"Generate a catchy, SEO-optimized, and clickbait-style video title using the subreddit '{subreddit}', post title '{post_title}', and post content '{post_content}'. Respond with ONLY one video title and nothing else."
-        }
-    ]
-    llm.set_param("messages", message)
-    llm.set_param("ctx_size", len(message[0]["content"]) + llm.params["ctx_size"])
-    out = llm.chat()
-    if out == None or out["choices"].__len__() == 0 or out["choices"][0]["message"] == None:
-        return "There is no response"
-    msg = out["choices"][0]["message"]["content"]
-    Info("Video title:", END, msg)
-    llm.llama.close()
-    return msg
+    def description(subreddit, post_title, post_content):
+        llm = LLMContext()
+        llm.load_model()
+        message = [
+            {
+                "role": "user",
+                "content": f"Generate an engaging video description using the subreddit '{subreddit}', post title '{post_title}', and post content '{post_content}'. Respond ONLY with the video description and nothing else. Do not include a title."
+            }
+        ]
+        llm.set_param("messages", message)
+        llm.set_param("ctx_size", len(message[0]["content"]) + llm.params["ctx_size"])
+        out = llm.chat()
+        if out == None or out["choices"].__len__() == 0 or out["choices"][0]["message"] == None:
+            return "There is no response"
+        msg = out["choices"][0]["message"]["content"]
+        Info("Video description:", END, msg)
+        return msg
 
-def generate_reddit_video_description(subreddit, post_title, post_content):
-    llm = LLMContext()
-    llm.load_model()
-    message = [
-        {
-            "role": "user",
-            "content": f"Generate an engaging video description using the subreddit '{subreddit}', post title '{post_title}', and post content '{post_content}'. Respond ONLY with the video description and nothing else. Do not include a title."
-        }
-    ]
-    llm.set_param("messages", message)
-    llm.set_param("ctx_size", len(message[0]["content"]) + llm.params["ctx_size"])
-    out = llm.chat()
-    if out == None or out["choices"].__len__() == 0 or out["choices"][0]["message"] == None:
-        return "There is no response"
-    msg = out["choices"][0]["message"]["content"]
-    Info("Video description:", END, msg)
-    llm.llama.close()
-    return msg
-
-def generate_reddit_video_tags(subreddit, post_title, post_content):
-    llm = LLMContext()
-    llm.load_model()
-    message = [
-        {
-            "role": "user",
-            "content": f"Generate video tags based on the subreddit '{subreddit}', post title '{post_title}', and post content '{post_content}'. Respond ONLY with the video tags in one line, separated by commas, and **without any hashtags, spaces, or whitespace**. Include tags related to Reddit and the title of the subreddit. Generate AT LEAST 50 tags. Do not respond with anything else."
-        }
-    ]
-    llm.set_param("messages", message)
-    llm.set_param("ctx_size", len(message[0]["content"]) + llm.params["ctx_size"])
-    out = llm.chat()
-    if out == None or out["choices"].__len__() == 0 or out["choices"][0]["message"] == None:
-        return "There is no response"
-    msg = out["choices"][0]["message"]["content"]
-    Info("Video tags:", END, msg)
-    llm.llama.close()
-    return msg
+    def tags(subreddit, post_title, post_content):
+        llm = LLMContext()
+        llm.load_model()
+        message = [
+            {
+                "role": "user",
+                "content": f"Generate video tags based on the subreddit '{subreddit}', post title '{post_title}', and post content '{post_content}'. Respond ONLY with the video tags in one line, separated by commas, and **without any hashtags, spaces, or whitespace**. Include tags related to Reddit and the title of the subreddit. Generate AT LEAST 50 tags. Do not respond with anything else."
+            }
+        ]
+        llm.set_param("messages", message)
+        llm.set_param("ctx_size", len(message[0]["content"]) + llm.params["ctx_size"])
+        out = llm.chat()
+        if out == None or out["choices"].__len__() == 0 or out["choices"][0]["message"] == None:
+            return "There is no response"
+        msg = out["choices"][0]["message"]["content"]
+        Info("Video tags:", END, msg)
+        return msg
 
 # data = get_hot_post_data("stories")
 # generate_reddit_video_title(data["subreddit"], data["title"], data["content"])

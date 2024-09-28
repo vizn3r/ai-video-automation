@@ -12,9 +12,11 @@ export VIDEO_INPUT_DIR="./media/videos/"
 export POST_LIST="./src/scripts/posts.txt"
 # LLM path
 export LLM_PATH="./media/llm/model.gguf"
+# YouTube client secret
+export YT_SECRET="./credentials.json"
 # Number of cores
 export NUM_CPU=16
 # Video width
 export OUT_WIDTH=1080
 
-python3 "./src/scripts/short.py"
+python3 "./src/scripts/upload.py"

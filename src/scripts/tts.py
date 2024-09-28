@@ -2,12 +2,15 @@ import torch
 import os
 from TTS.api import TTS
 from utils import Error
+import warnings
 
 if __name__ == "__main__":
     Error("This script is not meant to run standalone")
     exit(0)
 
 OUTPUT_DIR = os.environ["OUTPUT_DIR"] or "./"
+
+warnings.filterwarnings("ignore", category=FutureWarning)
 
 def generate_tts(text, name):
     path = OUTPUT_DIR + name + ".wav"

@@ -37,10 +37,10 @@ class RedditPost:
     def __init__(self, subreddit):
         Info("Source: r/" + subreddit)
         for submission in reddit.subreddit(subreddit).top(time_filter="day", limit=50):
-            if check_read(submission.title) or submission.over_18:
+            if not(check_read(submission.title) or submission.over_18):
                 mark_read(submission.title)
-                self.content = str(submission.selftext)
-                self.title = str(submission.title)
+                self.content = submission.selftext
+                self.title = submission.title
                 self.subreddit = subreddit
                 self.url = submission.permalink
                 return

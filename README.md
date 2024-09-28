@@ -17,8 +17,8 @@ Because I was bored.
 - `cd make-short`
 - Create `venv` environment by running `python3 -m venv venv`
 - Run this to install required packages `source ./venv/bin/activate & pip install -r requirements.txt`
-- Check `make-short` script options, adjust to your needs
-- Run `./make-short`
+- Check `make-video` script options, adjust to your needs
+- Run `./make-video`
     - If this doesn't run, you're either on Windows (this is made on WSL, might add Win script later), or
     - Don't have permissions to execute, to fix this run `sudo chmod +x make-short`
 - Watch the magic happen
@@ -49,6 +49,7 @@ Because I was bored.
 - [ ] Make server/client
 - [ ] Make prettier, more user accessible, easier installation
 - [ ] Add option to not use AI
+- [ ] Select if user wants to generate short and/or long form videos
 - [ ] (Maybe) add windows support
 
 ## **Disclaimer**

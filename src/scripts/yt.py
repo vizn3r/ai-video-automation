@@ -4,13 +4,9 @@ import google_auth_oauthlib.flow
 import googleapiclient.discovery
 import googleapiclient.errors
 from utils import Error
+from meta import VideoMeta
 
-if __name__ == "__main__":
-    Error("This script is not meant to run standalone")
-    exit(0)
-
-# Constants
-CLIENT_SECRETS_FILE = "./credentials.json"
+CLIENT_SECRETS_FILE = os.environ["YT_SECRET"] or "./credentials.json"
 YOUTUBE_UPLOAD_SCOPE = "https://www.googleapis.com/auth/youtube.upload"
 
 OUTPUT_DIR = os.environ["OUTPUT_DIR"] or "./"
@@ -21,18 +17,20 @@ def get_authenticated_service():
     credentials = flow.run_local_server(port=0)
     return googleapiclient.discovery.build("youtube", "v3", credentials=credentials)
 
-def upload_video(youtube, video_file, title):
+def upload_video(video_file, data: VideoMeta):
+    youtube = get_authenticated_service()
     body = {
         "snippet": {
-            "title": title,
-            #"description": description,
-            #"tags": tags,
+            "title": data.video_title,
+            "description": data.video_description,
+            "tags": data.video_tags,
             "categoryId": "22",
         },
         "status": {
             "privacyStatus": "public",
         },
     }
+    print(body)
 
     request = youtube.videos().insert(
         part="snippet,status",
@@ -43,8 +41,5 @@ def upload_video(youtube, video_file, title):
     print(f"Video uploaded: {response['id']}")
 
 if __name__ == "__main__":
-    youtube = get_authenticated_service()
-    video_file = OUTPUT_DIR + input("Video name: ") + ".mp4"
-    title = input("YT Video title: ")
-
-    upload_video(youtube, video_file, title)
+    Error("This script is not meant to run standalone")
+    exit(0)

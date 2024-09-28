@@ -6,8 +6,8 @@ from tts import generate_tts
 from subtitles import generate_subs
 from reddit import RedditPost
 from utils import Info, Error, Except, END
-from meta import generate_video_meta
-import llm
+from meta import VideoMeta
+from llm import RedditVideo
 
 NAME = dt.datetime.now().strftime("%m-%d-%Y_%H-%M-%S")
 
@@ -22,27 +22,27 @@ subs = [
     "trueoffmychest",
     "iama",
     "justnofamily",
-    "AmItheAsshole",
+    "amitheasshole",
     "relationship_advice",
     "truestory",
     "unresolvedmysteries",
     "maliciouscompliance",
-    "AskReddit",
+    "askreddit",
     "nostalgia",
     "offmychest",
     "relationship_advice",
-    "TalesFromTheFrontDesk",
-    "BestofRedditorUpdates",
-    "ThatHappened",
+    "talesfromthefrontdesk",
+    "bestofredditorupdates",
+    "thathappened",
     "creepy",
-    "AskWomen",
-    "AskMen",
-    "TrueCrime",
+    "askwomen",
+    "askmen",
+    "truecrime",
     "wholesomememes",
-    "AdventuresWithPets",
+    "adventureswithpets",
     "funny",
-    "UnpopularOpinion",
-    "ProRevenge"
+    "unpopularopinion",
+    "prorevenge"
 ]
 
 Info("Loading Reddit data")
@@ -97,18 +97,18 @@ out = mp.CompositeVideoClip([short, subs.set_position(("center", "center"))]).se
 out.write_videofile(OUTPUT_DIR + NAME + ".mp4", threads=NUM_CPU)
 
 Info("Generating video meta")
-vid_title = llm.generate_reddit_video_title(reddit_data.subreddit, reddit_data.title, reddit_data.content)
-vid_desc = llm.generate_reddit_video_description(reddit_data.subreddit, reddit_data.title, reddit_data.content)
-vid_tags_str = llm.generate_reddit_video_tags(reddit_data.subreddit, reddit_data.title, reddit_data.content)
+vid_title = RedditVideo.title(reddit_data.subreddit, reddit_data.title, reddit_data.content)
+vid_desc = RedditVideo.description(reddit_data.subreddit, reddit_data.title, reddit_data.content)
+vid_tags_str = RedditVideo.tags(reddit_data.subreddit, reddit_data.title, reddit_data.content)
 vid_tags = vid_tags_str.split(",")
 
 Info("Saving video meta")
-generate_video_meta(NAME, vid_form, out.duration, False, reddit_data.url, vid_title, vid_desc, vid_tags)
+VideoMeta.generate(NAME, vid_form, out.duration, False, reddit_data.url, vid_title, vid_desc, vid_tags)
 
 Info("Done!")
-Info("File name:", END, NAME)
-Info("Title:", END, vid_title)
-Info("Description:", END, vid_desc)
-Info("Tags:", END, vid_tags_str)
-Info("Duration:", END, out.duration, "/", vid_form)
-Info("Post link:", END, reddit_data.url)
+Info("File name:" + END, NAME)
+Info("Title:" + END, vid_title)
+Info("Description:" + END, vid_desc)
+Info("Tags:" + END, vid_tags_str)
+Info("Duration:" +END, out.duration, "/", vid_form)
+Info("Post link:" + END, reddit_data.url)
