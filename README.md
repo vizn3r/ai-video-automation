@@ -28,12 +28,12 @@ Because I was bored.
 - [ ] Generation of thumbnails and meta generation improvements
 - [ ] AI generated thumbnails
 - Add automatic upload support for:
-- [x] YouTube *(in development)*
+- [ ] YouTube *(in development)*
 - [ ] TikTok
 - [ ] Instagram
 - [ ] Facebook
 - Generate video content with:
-- [x] Reddit *(in development)*
+- [x] Reddit
 - [ ] Reddit posts with comments
 - [ ] 4chan greentexts
 - [ ] Twitter posts
