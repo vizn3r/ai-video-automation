@@ -32,6 +32,7 @@ Because I was bored.
 - [ ] TikTok
 - [ ] Instagram
 - [ ] Facebook
+<br/>
 - Generate video content with:
 - [x] Reddit
 - [ ] Reddit posts with comments
@@ -42,6 +43,7 @@ Because I was bored.
 - [ ] actual news pulled from some ass
 - [ ] compilations of previously generated short videos
 - [ ] trendy topics
+<br/>
 - [ ] Make prettier, more user accessible, easier installation
 - [ ] Add option to not use AI
 - [ ] (Maybe) add windows support
