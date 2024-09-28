@@ -186,7 +186,10 @@ def generate_reddit_video_title(subreddit, post_title, post_content):
     llm = LLMContext()
     llm.load_model()
     message = [
-        { "role": "user", "content": "Generate a catchy, SEO optimized and clickbaity title from subreddit " + subreddit + " , post title " + post_title + " and post content \"" + post_content + "\", respond ONLY with one video title. Don't respond with anything else."}
+        {
+            "role": "user",
+            "content": f"Generate a catchy, SEO-optimized, and clickbait-style video title using the subreddit '{subreddit}', post title '{post_title}', and post content '{post_content}'. Respond with ONLY one video title and nothing else."
+        }
     ]
     llm.set_param("messages", message)
     llm.set_param("ctx_size", len(message[0]["content"]) + llm.params["ctx_size"])
@@ -202,7 +205,10 @@ def generate_reddit_video_description(subreddit, post_title, post_content):
     llm = LLMContext()
     llm.load_model()
     message = [
-        { "role": "user", "content": "Generate only the description from subreddit " + subreddit + " , post title " + post_title + " and post content \"" + post_content + "\", respond ONLY with the video description. Don't generate the video title. Don't respond with anything else."}
+        {
+            "role": "user",
+            "content": f"Generate an engaging video description using the subreddit '{subreddit}', post title '{post_title}', and post content '{post_content}'. Respond ONLY with the video description and nothing else. Do not include a title."
+        }
     ]
     llm.set_param("messages", message)
     llm.set_param("ctx_size", len(message[0]["content"]) + llm.params["ctx_size"])
@@ -218,7 +224,10 @@ def generate_reddit_video_tags(subreddit, post_title, post_content):
     llm = LLMContext()
     llm.load_model()
     message = [
-        { "role": "user", "content": "Generate video tags based on subreddit " + subreddit + " , post title " + post_title + " and post content \"" + post_content + "\", respond ONLY with the video tags WITHOUT HASHTAG PREFIX in one line separated by comma without any spaces or whitespace. Include tags related to reddit and the title of the subreddit. Generate AT LEAST 50 tags. Don't respond with anything else."}
+        {
+            "role": "user",
+            "content": f"Generate video tags based on the subreddit '{subreddit}', post title '{post_title}', and post content '{post_content}'. Respond ONLY with the video tags in one line, separated by commas, and **without any hashtags, spaces, or whitespace**. Include tags related to Reddit and the title of the subreddit. Generate AT LEAST 50 tags. Do not respond with anything else."
+        }
     ]
     llm.set_param("messages", message)
     llm.set_param("ctx_size", len(message[0]["content"]) + llm.params["ctx_size"])

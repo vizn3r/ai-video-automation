@@ -5,7 +5,7 @@ import datetime as dt
 from tts import generate_tts
 from subtitles import generate_subs
 from reddit import RedditPost
-from utils import Info, Error, Except
+from utils import Info, Error, Except, END
 from meta import generate_video_meta
 import llm
 
@@ -17,7 +17,7 @@ NUM_CPU = os.environ["NUM_CPU"] or 1
 OUT_WIDTH = int(os.environ["OUT_WIDTH"]) or 1080
 
 subs = [
-    "stories",     
+    "stories",
     "confessions",
     "trueoffmychest",
     "iama",
@@ -26,7 +26,23 @@ subs = [
     "relationship_advice",
     "truestory",
     "unresolvedmysteries",
-    "maliciouscompliance"
+    "maliciouscompliance",
+    "AskReddit",
+    "nostalgia",
+    "offmychest",
+    "relationship_advice",
+    "TalesFromTheFrontDesk",
+    "BestofRedditorUpdates",
+    "ThatHappened",
+    "creepy",
+    "AskWomen",
+    "AskMen",
+    "TrueCrime",
+    "wholesomememes",
+    "AdventuresWithPets",
+    "funny",
+    "UnpopularOpinion",
+    "ProRevenge"
 ]
 
 Info("Loading Reddit data")
@@ -42,7 +58,6 @@ x1, x2 = (w - OUT_WIDTH)//2, (w + OUT_WIDTH)//2
 y1, y2 = 0, h
 
 Info("Generating audio")
-print(type(reddit_data.content))
 audio_path = generate_tts(reddit_data.content, NAME)
 audio = mp.AudioFileClip(audio_path)
 vid_form = ""
@@ -91,9 +106,9 @@ Info("Saving video meta")
 generate_video_meta(NAME, vid_form, out.duration, False, reddit_data.url, vid_title, vid_desc, vid_tags)
 
 Info("Done!")
-Info("File name:  ", NAME)
-Info("Title:      ", vid_title)
-Info("Description:", vid_desc)
-Info("Tags:       ", vid_tags_str)
-Info("Duration:   ", out.duration, "/", vid_form)
-Info("Post link:  ", reddit_data.url)
+Info("File name:", END, NAME)
+Info("Title:", END, vid_title)
+Info("Description:", END, vid_desc)
+Info("Tags:", END, vid_tags_str)
+Info("Duration:", END, out.duration, "/", vid_form)
+Info("Post link:", END, reddit_data.url)
