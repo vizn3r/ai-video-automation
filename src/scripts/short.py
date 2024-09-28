@@ -9,9 +9,12 @@ from utils import Info, Error, Except
 from meta import generate_video_meta
 import llm
 
-OUT_WIDTH = 1080
-COLOR = "\033[92m"
-END = "\033[0m"
+NAME = dt.datetime.now().strftime("%m-%d-%Y_%H-%M-%S")
+
+OUTPUT_DIR = os.environ["OUTPUT_DIR"] or "./"
+VIDEO_INPUT_DIR = os.environ["VIDEO_INPUT_DIR"] or "./"
+NUM_CPU = os.environ["NUM_CPU"] or 1
+OUT_WIDTH = int(os.environ["OUT_WIDTH"]) or 1080
 
 subs = [
     "stories",     
@@ -28,14 +31,11 @@ subs = [
 ]
 
 REDDIT_DATA = get_hot_post_data(subs[random.randint(0, len(subs))])
-NAME = dt.datetime.now().strftime("%m-%d-%Y_%H-%M-%S")
-
-OUTPUT_DIR = os.environ["OUTPUT_DIR"] or "./"
-VIDEO_INPUT_DIR = os.environ["VIDEO_INPUT_DIR"] or "./"
 
 Info("Loading video")
 videos = [f for f in os.listdir(VIDEO_INPUT_DIR) if os.path.isfile(os.path.join(VIDEO_INPUT_DIR, f))]
-vid = mp.VideoFileClip(VIDEO_INPUT_DIR + videos[random.randint(0, len(videos))], audio=False)
+
+vid = mp.VideoFileClip(VIDEO_INPUT_DIR + videos[random.randint(1, len(videos))], audio=False)
 (w, h) = vid.size
 
 x1, x2 = (w - OUT_WIDTH)//2, (w + OUT_WIDTH)//2
@@ -78,7 +78,7 @@ subs = mp.CompositeVideoClip(clips)
 
 Info("Putting it all together")
 out = mp.CompositeVideoClip([short, subs.set_position(("center", "center"))]).set_duration(short.duration)
-out.write_videofile(OUTPUT_DIR + NAME + ".mp4", threads=16)
+out.write_videofile(OUTPUT_DIR + NAME + ".mp4", threads=NUM_CPU)
 
 Info("Generating video meta")
 vid_title = llm.generate_reddit_video_title(REDDIT_DATA["subreddit"], REDDIT_DATA["title"], REDDIT_DATA["content"])
@@ -94,6 +94,6 @@ print("File name:  ", NAME)
 print("Title:      ", vid_title)
 print("Description:", vid_desc)
 print("Tags:       ", vid_tags_str)
-print("Duration:   ", out.duration)
+print("Duration:   ", out.duration, "/", vid_form)
 print("Post link:  ", REDDIT_DATA["url"])
 print("file://///wsl.localhost/Ubuntu/home/vizn3r/dev/yt-automation/videos/output/" + NAME + ".mp4")
