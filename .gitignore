@@ -1,0 +1,11 @@
+# Media ignore
+media/**/*.*
+out/**/*.*
+posts.txt
+
+# Bloat ignore
+__pycache__
+venv
+
+# Creds ignore
+credentials.json

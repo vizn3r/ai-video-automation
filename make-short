@@ -1,0 +1,14 @@
+#!/bin/bash
+source "./venv/bin/activate"
+
+## CONFIGURATION
+# ImageMagick binary
+export IMAGEMAGICK_BINARY="/mnt/c/Program Files/ImageMagick-7.1.1-Q16-HDRI/magick.exe"
+# Output directory
+export OUTPUT_DIR="./out/"
+# Video input directory
+export VIDEO_INPUT_DIR="./media/videos/"
+# Post list
+export POST_LIST="./src/scripts/posts.txt"
+
+python3 "./src/scripts/short.py"
