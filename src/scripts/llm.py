@@ -4,7 +4,6 @@ from llama_cpp import LLAMA_DEFAULT_SEED, LLAMA_POOLING_TYPE_UNSPECIFIED, LLAMA_
 from typing import Any
 import os
 from utils import Except, Info, Error, END
-from reddit import get_hot_post_data
 
 if __name__ == "__main__":
     Error("This script is not meant to run standalone")
@@ -187,7 +186,7 @@ def generate_reddit_video_title(subreddit, post_title, post_content):
     llm = LLMContext()
     llm.load_model()
     message = [
-        { "role": "user", "content": "Generate a catchy, SEO optimized and clickbaity title from subreddit " + subreddit + " , post title " + post_title + " and post content \"" + post_content + "\", respond ONLY with the video title. Dont respond with anything else."}
+        { "role": "user", "content": "Generate a catchy, SEO optimized and clickbaity title from subreddit " + subreddit + " , post title " + post_title + " and post content \"" + post_content + "\", respond ONLY with one video title. Don't respond with anything else."}
     ]
     llm.set_param("messages", message)
     llm.set_param("ctx_size", len(message[0]["content"]) + llm.params["ctx_size"])
@@ -219,7 +218,7 @@ def generate_reddit_video_tags(subreddit, post_title, post_content):
     llm = LLMContext()
     llm.load_model()
     message = [
-        { "role": "user", "content": "Generate video tags based on subreddit " + subreddit + " , post title " + post_title + " and post content \"" + post_content + "\", respond ONLY with the video tags WITHOUT HASHTAG PREFIX in one line separated by comma without any spaces or whitespace. Include tags related to reddit stories and the title of the subreddit. Generate AT LEAST 50 tags. Don't respond with anything else."}
+        { "role": "user", "content": "Generate video tags based on subreddit " + subreddit + " , post title " + post_title + " and post content \"" + post_content + "\", respond ONLY with the video tags WITHOUT HASHTAG PREFIX in one line separated by comma without any spaces or whitespace. Include tags related to reddit and the title of the subreddit. Generate AT LEAST 50 tags. Don't respond with anything else."}
     ]
     llm.set_param("messages", message)
     llm.set_param("ctx_size", len(message[0]["content"]) + llm.params["ctx_size"])

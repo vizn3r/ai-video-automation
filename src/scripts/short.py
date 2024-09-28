@@ -4,7 +4,7 @@ import os
 import datetime as dt
 from tts import generate_tts
 from subtitles import generate_subs
-from reddit import get_hot_post_data
+from reddit import RedditPost
 from utils import Info, Error, Except
 from meta import generate_video_meta
 import llm
@@ -19,30 +19,31 @@ OUT_WIDTH = int(os.environ["OUT_WIDTH"]) or 1080
 subs = [
     "stories",     
     "confessions",
-    "TrueOffMyChest",
-    "IAmA",
-    "JustNoFamily",
-    "AmITheAsshole",
-    "Relationship_Advice",
-    "LetsNotMeet",
-    "TrueStory",
-    "UnresolvedMysteries",
-    "MaliciousCompliance"
+    "trueoffmychest",
+    "iama",
+    "justnofamily",
+    "AmItheAsshole",
+    "relationship_advice",
+    "truestory",
+    "unresolvedmysteries",
+    "maliciouscompliance"
 ]
 
-REDDIT_DATA = get_hot_post_data(subs[random.randint(0, len(subs))])
+Info("Loading Reddit data")
+reddit_data = RedditPost(subs[random.randint(0, len(subs))])
 
 Info("Loading video")
-videos = [f for f in os.listdir(VIDEO_INPUT_DIR) if os.path.isfile(os.path.join(VIDEO_INPUT_DIR, f))]
+videos = [f for f in os.listdir(VIDEO_INPUT_DIR) if os.path.isfile(os.path.join(VIDEO_INPUT_DIR, f)) and not f.startswith("!put_background_videos_here")]
 
-vid = mp.VideoFileClip(VIDEO_INPUT_DIR + videos[random.randint(1, len(videos))], audio=False)
+vid = mp.VideoFileClip(VIDEO_INPUT_DIR + videos[random.randint(0, len(videos))], audio=False)
 (w, h) = vid.size
 
 x1, x2 = (w - OUT_WIDTH)//2, (w + OUT_WIDTH)//2
 y1, y2 = 0, h
 
 Info("Generating audio")
-audio_path = generate_tts(REDDIT_DATA["content"], NAME)
+print(type(reddit_data.content))
+audio_path = generate_tts(str(reddit_data.content), NAME)
 audio = mp.AudioFileClip(audio_path)
 vid_form = ""
 if audio.duration >= 60:
@@ -81,13 +82,13 @@ out = mp.CompositeVideoClip([short, subs.set_position(("center", "center"))]).se
 out.write_videofile(OUTPUT_DIR + NAME + ".mp4", threads=NUM_CPU)
 
 Info("Generating video meta")
-vid_title = llm.generate_reddit_video_title(REDDIT_DATA["subreddit"], REDDIT_DATA["title"], REDDIT_DATA["content"])
-vid_desc = llm.generate_reddit_video_description(REDDIT_DATA["subreddit"], REDDIT_DATA["title"], REDDIT_DATA["content"])
-vid_tags_str = llm.generate_reddit_video_tags(REDDIT_DATA["subreddit"], REDDIT_DATA["title"], REDDIT_DATA["content"])
+vid_title = llm.generate_reddit_video_title(reddit_data.subreddit, reddit_data.title, reddit_data.content)
+vid_desc = llm.generate_reddit_video_description(reddit_data.subreddit, reddit_data.title, reddit_data.content)
+vid_tags_str = llm.generate_reddit_video_tags(reddit_data.subreddit, reddit_data.title, reddit_data.content)
 vid_tags = vid_tags_str.split(",")
 
 Info("Saving video meta")
-generate_video_meta(NAME, vid_form, out.duration, False, REDDIT_DATA["url"], vid_title, vid_desc, vid_tags, REDDIT_DATA["nsfw"])
+generate_video_meta(NAME, vid_form, out.duration, False, reddit_data.url, vid_title, vid_desc, vid_tags)
 
 Info("Done!")
 Info("File name:  ", NAME)
@@ -95,4 +96,4 @@ Info("Title:      ", vid_title)
 Info("Description:", vid_desc)
 Info("Tags:       ", vid_tags_str)
 Info("Duration:   ", out.duration, "/", vid_form)
-Info("Post link:  ", REDDIT_DATA["url"])
+Info("Post link:  ", reddit_data.url)

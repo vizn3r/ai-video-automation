@@ -3,7 +3,6 @@ import os
 from utils import Error, Info
 
 POST_LIST = os.environ["POST_LIST"] or "./posts.txt"
-NSFW = bool(os.environ["NSFW"]) or False
 
 if __name__ == "__main__":
     Error("This script is not meant to run standalone")
@@ -15,12 +14,12 @@ reddit = praw.Reddit(
     user_agent="yt-automation",
 )
 
-def __mark_read(post):
+def mark_read(post):
     f = open(POST_LIST, "a")
     f.write(post + "\n")
     f.close()
 
-def __check_read(post):
+def check_read(post):
     with open(POST_LIST, "r") as file:
         lines = file.readlines()
     for line in lines:
@@ -28,18 +27,22 @@ def __check_read(post):
             return True
     return False
 
-def get_hot_post_data(subreddit):
-    for submission in reddit.subreddit(subreddit).top(time_filter="day"):
-        if __check_read(submission.title) or ((submission.over_18 and NSFW) or NSFW):
-            continue
-        __mark_read(submission.title)
-        Info("Source: r/", subreddit)
-        return {
-            "content": submission.selftext,
-            "title": submission.title,
-            "subreddit": subreddit,
-            "url": submission.permalink,
-            "nsfw": submission.over_18
-        }
+class RedditPost:
+    content: str = ""
+    title: str = ""
+    subreddit: str = ""
+    url: str = ""
+    nsfw: bool = False
+
+    def __init__(self, subreddit):
+        Info("Source: r/" + subreddit)
+        for submission in reddit.subreddit(subreddit).top(time_filter="day", limit=50):
+            if check_read(submission.title) or submission.over_18:
+                mark_read(submission.title)
+                self.content = str(submission.selftext),
+                self.title = str(submission.title),
+                self.subreddit = subreddit,
+                self.url = submission.permalink,
+                return
     
 # print(get_hot_post_data("stories")["content"])
