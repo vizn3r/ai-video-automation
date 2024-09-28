@@ -34,7 +34,6 @@ subs = [
     "relationship_advice",
     "talesfromthefrontdesk",
     "bestofredditorupdates",
-    "thathappened",
     "creepy",
     "askwomen",
     "askmen",
@@ -98,12 +97,12 @@ out = mp.CompositeVideoClip([short, subs.set_position(("center", "center"))]).se
 out.write_videofile(OUTPUT_DIR + NAME + ".mp4", threads=NUM_CPU)
 
 Info("Generating video meta")
-vid_title = RedditVideo.title(reddit_data.subreddit, reddit_data.title, reddit_data.content)
-vid_desc = RedditVideo.description(reddit_data.subreddit, reddit_data.title, reddit_data.content)
-vid_tags_str = RedditVideo.tags(reddit_data.subreddit, reddit_data.title, reddit_data.content)
+vid_title = RedditVideo.title(reddit_data.subreddit, reddit_data.title, reddit_data.content).removeprefix("\"").removesuffix("\"")
+vid_desc = RedditVideo.description(reddit_data.subreddit, reddit_data.title, reddit_data.content).removeprefix("\"").removesuffix("\"")
+vid_tags_str = RedditVideo.tags(reddit_data.subreddit, reddit_data.title, reddit_data.content).removeprefix("\"").removesuffix("\"")
 vid_tags = vid_tags_str.split(",")
 for tag in vid_tags:
-    tag = tag.removeprefix(" ").removesuffix("\n").removesuffix("\\n")
+    tag = tag.removeprefix(" ").removesuffix("\n").removesuffix("\"")
 
 Info("Saving video meta")
 VideoMeta.generate(NAME, vid_form, out.duration, False, reddit_data.url, vid_title, vid_desc, vid_tags)

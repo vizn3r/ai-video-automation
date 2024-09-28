@@ -99,7 +99,7 @@ class LLMContext:
                 model=self.params["model"],
                 logits_processor=self.params["logits_processor"],
                 grammar=self.params["grammar"],
-                logit_bias=self.params["logit_bias"],
+                logit_bias=self.params["logit_bias"]
             )
             if isinstance(res, dict):
                 return res
@@ -203,6 +203,7 @@ class RedditVideo:
         msg = out["choices"][0]["message"]["content"]
         if len(msg) >= 100:
             Info("Video title is too long, redoing it recursively")
+            llm.llama.close()
             msg = RedditVideo.title(subreddit, post_title, post_content)
         Info("Video title:", END, msg)
         llm.llama.close()
