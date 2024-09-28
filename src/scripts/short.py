@@ -8,6 +8,7 @@ from reddit import RedditPost
 from utils import Info, Error, Except, END
 from meta import VideoMeta
 from llm import RedditVideo
+import re
 
 NAME = dt.datetime.now().strftime("%m-%d-%Y_%H-%M-%S")
 
@@ -101,6 +102,8 @@ vid_title = RedditVideo.title(reddit_data.subreddit, reddit_data.title, reddit_d
 vid_desc = RedditVideo.description(reddit_data.subreddit, reddit_data.title, reddit_data.content)
 vid_tags_str = RedditVideo.tags(reddit_data.subreddit, reddit_data.title, reddit_data.content)
 vid_tags = vid_tags_str.split(",")
+for tag in vid_tags:
+    tag = tag.removeprefix(" ").removesuffix("\n").removesuffix("\\n")
 
 Info("Saving video meta")
 VideoMeta.generate(NAME, vid_form, out.duration, False, reddit_data.url, vid_title, vid_desc, vid_tags)

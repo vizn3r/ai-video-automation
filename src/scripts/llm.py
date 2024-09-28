@@ -185,9 +185,10 @@ class LLMContext:
     }
 
         
-llm = LLMContext().load_model()
 class RedditVideo:
     def title(subreddit, post_title, post_content):
+        llm = LLMContext()
+        llm.load_model()
         message = [
             {
                 "role": "user",
@@ -204,9 +205,12 @@ class RedditVideo:
             Info("Video title is too long, redoing it recursively")
             msg = RedditVideo.title(subreddit, post_title, post_content)
         Info("Video title:", END, msg)
+        llm.llama.close()
         return msg
 
     def description(subreddit, post_title, post_content):
+        llm = LLMContext()
+        llm.load_model()
         message = [
             {
                 "role": "user",
@@ -220,9 +224,12 @@ class RedditVideo:
             return "There is no response"
         msg = out["choices"][0]["message"]["content"]
         Info("Video description:", END, msg)
+        llm.llama.close()
         return msg
 
     def tags(subreddit, post_title, post_content):
+        llm = LLMContext()
+        llm.load_model()
         message = [
             {
                 "role": "user",
@@ -236,6 +243,7 @@ class RedditVideo:
             return "There is no response"
         msg = out["choices"][0]["message"]["content"]
         Info("Video tags:", END, msg)
+        llm.llama.close()
         return msg
 
 # data = get_hot_post_data("stories")
