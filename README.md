@@ -24,15 +24,17 @@ Because I was bored.
 - Watch the magic happen
 
 ## Plans
-- [ ] Make server/client
+### Core
 - [ ] Generation of thumbnails and meta generation improvements
 - [ ] AI generated thumbnails
-- Add automatic upload support for:
+
+### Add automatic upload support for:
 - [ ] YouTube *(in development)*
 - [ ] TikTok
 - [ ] Instagram
 - [ ] Facebook
-- Generate video content with:
+
+### Generate video content with:
 - [x] Reddit
 - [ ] Reddit posts with comments
 - [ ] 4chan greentexts
@@ -42,6 +44,9 @@ Because I was bored.
 - [ ] actual news pulled from some ass
 - [ ] compilations of previously generated short videos
 - [ ] trendy topics
+
+### User
+- [ ] Make server/client
 - [ ] Make prettier, more user accessible, easier installation
 - [ ] Add option to not use AI
 - [ ] (Maybe) add windows support
