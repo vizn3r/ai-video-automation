@@ -1,21 +1,29 @@
-from llama_cpp import LLAMA_DEFAULT_SEED, LLAMA_POOLING_TYPE_UNSPECIFIED, LLAMA_ROPE_SCALING_TYPE_UNSPECIFIED, CreateChatCompletionResponse, Llama, LLAMA_SPLIT_MODE_LAYER
-from flask import Flask, request
+# Source: https://github.com/vizn3r/ai-toolkit/blob/main/proc/llm.py
 
+from llama_cpp import LLAMA_DEFAULT_SEED, LLAMA_POOLING_TYPE_UNSPECIFIED, LLAMA_ROPE_SCALING_TYPE_UNSPECIFIED, CreateChatCompletionResponse, Llama, LLAMA_SPLIT_MODE_LAYER
 from typing import Any
 import os
-import json
+from utils import Except, Info, Error, END
+from reddit import get_hot_post_data
 
-from utils import Except, Info, Error
+if __name__ == "__main__":
+    Error("This script is not meant to run standalone")
+    exit(0)
+
+LLM_PATH = os.environ["LLM_PATH"] or "../../media/llm/model.gguf"
 
 class LLMContext:
     def __init__(self) -> None:
         pass
 
     def load_model(self) -> str:
-        Info("Loading model...")
+        Info("Loading model")
+        if self.llama != None:
+            Info("Model already loaded")
+            return "model already loaded"
         try:
             self.llama = Llama(
-                model_path="../models/llm/"+self.params["model_name"],
+                model_path=self.params["model_name"],
                 n_gpu_layers=self.params["n_gpu_layers"],
                 split_mode=self.params["split_mode"],
                 main_gpu=self.params["gpu"],
@@ -49,7 +57,6 @@ class LLMContext:
                 chat_handler=self.params["chat_handler"],
                 draft_model=self.params["draft_model"],
                 tokenizer=self.params["tokenizer"],
-                verbose=DEBUG,
                 type_k=self.params["type_k"],
                 type_v=self.params["type_v"],
             )
@@ -62,8 +69,7 @@ class LLMContext:
     def chat(self) -> CreateChatCompletionResponse | None:
         if self.llama == None:
             return None
-        Info("Creating chat completion...")
-        Debug("Chat:", llm.params["messages"])
+        Info("Creating chat completion")
         try:
             res = self.llama.create_chat_completion(
                 messages=self.params["messages"],
@@ -93,7 +99,6 @@ class LLMContext:
                 grammar=self.params["grammar"],
                 logit_bias=self.params["logit_bias"],
             )
-            Debug("Assistant response: " + res.__str__())
             if isinstance(res, dict):
                 return res
             else:
@@ -103,13 +108,12 @@ class LLMContext:
             return None
 
     def set_param(self, param: str, value: Any):
-        Debug("Settng parameter " + param + ": " + value)
         self.params[param] = value
 
     llama: Llama | None = None
     params: dict[str, Any] = {
         # Llama default parameters
-        "model_name": "", #model_path
+        "model_name": LLM_PATH, #model_path
         "n_gpu_layers": 8,
         "split_mode": LLAMA_SPLIT_MODE_LAYER,
         "gpu": 0, #main_gpu
@@ -119,7 +123,7 @@ class LLMContext:
         "use_mlock": False,
         "kv_overrides": None,
         "seed": LLAMA_DEFAULT_SEED,
-        "ctx_size": 2048, #n_ctx
+        "ctx_size": 2096, #n_ctx
         "batch_size": 512, #n_batch
         "threads": 4, #n_threads
         "threads_batch": None, #n_threads_batch
@@ -178,51 +182,103 @@ class LLMContext:
         "history": [],
     }
 
-llm = LLMContext()
-app = Flask(__name__)
 
-@app.get("/")
-def get():
-    llms = os.listdir("../models/llm/")
-    res = {
-        "models": llms
-    }
-    return json.dumps(res)
-
-@app.post("/")
-def post():
-    req = request.get_json()
-    Debug("New POST req: ", req)
-    for param in llm.params:
-        try:
-            Debug("Setting param", param, ":", req[param])
-            llm.params[param] = req[param]
-        except:
-            pass
-    if llm.llama == None and llm.params["model_name"] != "":
-        llm.load_model()
-
-    # completion system
-    m = llm.params["messages"]
-    if m == None:
-        return "ok"
-    # for single message and single response
-    if isinstance(m, str):
-        llm.params["messages"] = [{ "role": "user", "content": m }]
-        out = llm.chat()
-        if out == None or out["choices"].__len__() == 0 or out["choices"][0]["message"] == None:
-            return "There is no response"
-        msg = out["choices"][0]["message"]["content"]
-        if out == None or msg == None:
-            return "there is no response"
-        else:
-            return msg
-    # for chat history
-    llm.params["history"] = llm.params["history"] + m
-    llm.params["messages"] = llm.params["history"]
+def generate_reddit_video_title(subreddit, post_title, post_content):
+    llm = LLMContext()
+    llm.load_model()
+    message = [
+        { "role": "user", "content": "Generate a catchy, SEO optimized and clickbaity title from subreddit " + subreddit + " , post title " + post_title + " and post content \"" + post_content + "\", respond ONLY with the video title. Dont respond with anything else."}
+    ]
+    llm.set_param("messages", message)
+    llm.set_param("ctx_size", len(message[0]["content"]) + llm.params["ctx_size"])
     out = llm.chat()
-    if out == None:
-        return "there was no response"
-    llm.params["history"] += [out["choices"][0]['message']]
-    Debug("History:", llm.params["history"])
-    return out
+    if out == None or out["choices"].__len__() == 0 or out["choices"][0]["message"] == None:
+        return "There is no response"
+    msg = out["choices"][0]["message"]["content"]
+    Info("Video title:", END, msg)
+    llm.llama.close()
+    return msg
+
+def generate_reddit_video_description(subreddit, post_title, post_content):
+    llm = LLMContext()
+    llm.load_model()
+    message = [
+        { "role": "user", "content": "Generate only the description from subreddit " + subreddit + " , post title " + post_title + " and post content \"" + post_content + "\", respond ONLY with the video description. Don't generate the video title. Don't respond with anything else."}
+    ]
+    llm.set_param("messages", message)
+    llm.set_param("ctx_size", len(message[0]["content"]) + llm.params["ctx_size"])
+    out = llm.chat()
+    if out == None or out["choices"].__len__() == 0 or out["choices"][0]["message"] == None:
+        return "There is no response"
+    msg = out["choices"][0]["message"]["content"]
+    Info("Video description:", END, msg)
+    llm.llama.close()
+    return msg
+
+def generate_reddit_video_tags(subreddit, post_title, post_content):
+    llm = LLMContext()
+    llm.load_model()
+    message = [
+        { "role": "user", "content": "Generate video tags based on subreddit " + subreddit + " , post title " + post_title + " and post content \"" + post_content + "\", respond ONLY with the video tags WITHOUT HASHTAG PREFIX in one line separated by comma without any spaces or whitespace. Include tags related to reddit stories and the title of the subreddit. Generate AT LEAST 50 tags. Don't respond with anything else."}
+    ]
+    llm.set_param("messages", message)
+    llm.set_param("ctx_size", len(message[0]["content"]) + llm.params["ctx_size"])
+    out = llm.chat()
+    if out == None or out["choices"].__len__() == 0 or out["choices"][0]["message"] == None:
+        return "There is no response"
+    msg = out["choices"][0]["message"]["content"]
+    Info("Video tags:", END, msg)
+    llm.llama.close()
+    return msg
+
+# data = get_hot_post_data("stories")
+# generate_reddit_video_title(data["subreddit"], data["title"], data["content"])
+# generate_reddit_video_description(data["subreddit"], data["title"], data["content"])
+# generate_reddit_video_tags(data["subreddit"], data["title"], data["content"])
+
+# app = Flask(__name__)
+# 
+# @app.get("/")
+# def get():
+#     llms = os.listdir("../models/llm/")
+#     res = {
+#         "models": llms
+#     }
+#     return json.dumps(res)
+# 
+# @app.post("/")
+# def post():
+#     req = request.get_json()
+#     for param in llm.params:
+#         try:
+#             llm.params[param] = req[param]
+#         except:
+#             pass
+#     if llm.llama == None and llm.params["model_name"] != "":
+#         llm.load_model()
+# 
+#     # completion system
+#     m = llm.params["messages"]
+#     if m == None:
+#         return "ok"
+#     # for single message and single response
+#     if isinstance(m, str):
+#         llm.params["messages"] = [{ "role": "user", "content": m }]
+#         out = llm.chat()
+#         if out == None or out["choices"].__len__() == 0 or out["choices"][0]["message"] == None:
+#             return "There is no response"
+#         msg = out["choices"][0]["message"]["content"]
+#         if out == None or msg == None:
+#             return "there is no response"
+#         else:
+#             return msg
+#     # for chat history
+#     llm.params["history"] = llm.params["history"] + m
+#     llm.params["messages"] = llm.params["history"]
+#     out = llm.chat()
+#     if out == None:
+#         return "there was no response"
+#     llm.params["history"] += [out["choices"][0]['message']]
+#     return out
+# 
+# app.run(port=8080)

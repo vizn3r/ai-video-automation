@@ -13,4 +13,4 @@ export POST_LIST="./src/scripts/posts.txt"
 # LLM path
 export LLM_PATH="./media/llm/model.gguf"
 
-python3 "./src/scripts/short.py"
+python3 "./src/scripts/$1"

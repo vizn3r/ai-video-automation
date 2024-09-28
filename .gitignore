@@ -2,6 +2,7 @@
 media/**/*.*
 out/**/*.*
 posts.txt
+**/*.mp3
 
 # Bloat ignore
 __pycache__

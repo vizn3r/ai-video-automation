@@ -1,8 +1,16 @@
+GREEN = "\033[92m"
+RED = "\033[91m"
+END = "\033[0m"
+
 def Info(*message):
-    print("[ INFO ]", *message)
+    print(GREEN + "==>", *message, END)
 
 def Error(*message):
-    print("[ ERROR ]", *message)
+    print(RED + "==!", *message, END)
 
 def Except(e, *message):
     print("[ EXCEPTION ]", *message, "\n  >>>", e)
+
+if __name__ == "__main__":
+    Error("This script is not meant to run standalone")
+    exit(0)

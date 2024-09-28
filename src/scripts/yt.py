@@ -3,6 +3,11 @@ import google.auth
 import google_auth_oauthlib.flow
 import googleapiclient.discovery
 import googleapiclient.errors
+from utils import Error
+
+if __name__ == "__main__":
+    Error("This script is not meant to run standalone")
+    exit(0)
 
 # Constants
 CLIENT_SECRETS_FILE = "./credentials.json"

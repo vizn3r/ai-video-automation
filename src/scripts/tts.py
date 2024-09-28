@@ -2,13 +2,13 @@ import torch
 import os
 from TTS.api import TTS
 from datetime import date
-
-OUTPUT_DIR = os.environ["OUTPUT_DIR"] or "./"
+from utils import Error
 
 if __name__ == "__main__":
-    print("This script is not meant to run standalone")
+    Error("This script is not meant to run standalone")
     exit(0)
 
+OUTPUT_DIR = os.environ["OUTPUT_DIR"] or "./"
 
 def generate_tts(text, name):
     path = OUTPUT_DIR + name + ".wav"
