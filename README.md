@@ -25,6 +25,7 @@ Because I was bored.
 
 ## Plans
 - Make server/client
+- Generation of thumbnails and meta generation improvements
 - Add automatic upload support for
     - YouTube *(in development)*
     - TikTok
