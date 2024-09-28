@@ -43,7 +43,7 @@ y1, y2 = 0, h
 
 Info("Generating audio")
 print(type(reddit_data.content))
-audio_path = generate_tts(str(reddit_data.content), NAME)
+audio_path = generate_tts(reddit_data.content, NAME)
 audio = mp.AudioFileClip(audio_path)
 vid_form = ""
 if audio.duration >= 60:

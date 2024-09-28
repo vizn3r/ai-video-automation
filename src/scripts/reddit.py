@@ -39,10 +39,10 @@ class RedditPost:
         for submission in reddit.subreddit(subreddit).top(time_filter="day", limit=50):
             if check_read(submission.title) or submission.over_18:
                 mark_read(submission.title)
-                self.content = str(submission.selftext),
-                self.title = str(submission.title),
-                self.subreddit = subreddit,
-                self.url = submission.permalink,
+                self.content = str(submission.selftext)
+                self.title = str(submission.title)
+                self.subreddit = subreddit
+                self.url = submission.permalink
                 return
     
 # print(get_hot_post_data("stories")["content"])
