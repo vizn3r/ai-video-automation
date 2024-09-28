@@ -3,6 +3,7 @@ import os
 from utils import Error, Info
 
 POST_LIST = os.environ["POST_LIST"] or "./posts.txt"
+NSFW = bool(os.environ["NSFW"]) or False
 
 if __name__ == "__main__":
     Error("This script is not meant to run standalone")
@@ -29,7 +30,7 @@ def __check_read(post):
 
 def get_hot_post_data(subreddit):
     for submission in reddit.subreddit(subreddit).top(time_filter="day"):
-        if __check_read(submission.title) or submission.over_18:
+        if __check_read(submission.title) or ((submission.over_18 and NSFW) or NSFW):
             continue
         __mark_read(submission.title)
         Info("Source: r/", subreddit)
@@ -37,7 +38,8 @@ def get_hot_post_data(subreddit):
             "content": submission.selftext,
             "title": submission.title,
             "subreddit": subreddit,
-            "url": submission.permalink
+            "url": submission.permalink,
+            "nsfw": submission.over_18
         }
     
 # print(get_hot_post_data("stories")["content"])

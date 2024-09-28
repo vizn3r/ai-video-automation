@@ -16,5 +16,7 @@ export LLM_PATH="./media/llm/model.gguf"
 export NUM_CPU=16
 # Video width
 export OUT_WIDTH=1080
+# NSFW
+export NSFW="True"
 
 python3 "./src/scripts/short.py"

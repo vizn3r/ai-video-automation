@@ -4,7 +4,7 @@ from utils import Error
 
 OUTPUT_DIR = os.environ["OUTPUT_DIR"] or "./"
 
-def generate_video_meta(name: str, form: str, duration: float, uploaded: bool, source_url: str, vid_title: str, vid_desc: str, vid_tags: list[str]):
+def generate_video_meta(name: str, form: str, duration: float, uploaded: bool, source_url: str, vid_title: str, vid_desc: str, vid_tags: list[str], vid_nsfw: bool):
     with open(OUTPUT_DIR + name + ".json", "w") as f:
         data = {
             "name": name,
@@ -15,7 +15,8 @@ def generate_video_meta(name: str, form: str, duration: float, uploaded: bool, s
             "video": {
                 "title": vid_title,
                 "description": vid_desc,
-                "tags": vid_tags
+                "tags": vid_tags,
+                "nsfw": vid_nsfw
             }
         }
         json.dump(data, f)
