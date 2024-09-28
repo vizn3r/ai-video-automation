@@ -207,8 +207,6 @@ class RedditVideo:
         return msg
 
     def description(subreddit, post_title, post_content):
-        llm = LLMContext()
-        llm.load_model()
         message = [
             {
                 "role": "user",
@@ -225,8 +223,6 @@ class RedditVideo:
         return msg
 
     def tags(subreddit, post_title, post_content):
-        llm = LLMContext()
-        llm.load_model()
         message = [
             {
                 "role": "user",

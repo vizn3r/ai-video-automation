@@ -1,5 +1,4 @@
 import os
-import google.auth
 import google_auth_oauthlib.flow
 import googleapiclient.discovery
 import googleapiclient.errors
