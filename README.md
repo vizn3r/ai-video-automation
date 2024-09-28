@@ -8,7 +8,7 @@ Because I was bored.
 
 ## How to use
 ### Requirements
-- Have GPU that can run LLMs
+- Have GPU that can run LLMs and pytorch
 - ImageMagick installed
 - Python3
 
@@ -20,10 +20,29 @@ Because I was bored.
 - Check `make-short` script options, adjust to your needs
 - Run `./make-short`
     - If this doesn't run, you're either on Windows (this is made on WSL, might add Win script later), or
-    - Don't have permissions to execute, to fix this run `chmod +x make-short`
+    - Don't have permissions to execute, to fix this run `sudo chmod +x make-short`
 - Watch the magic happen
 
-## Disclaimer
-- This is personal project, not intended for production use
-- No collaborations
-- If you have problem running this, you have clear skill issue or you're trying to run this on Windows
+## Plans
+- Make server/client
+- Add automatic upload support for
+    - YouTube *(in development)*
+    - TikTok
+    - Instagram
+    - Facebook
+- Generate video content with
+    - Reddit *(in development)*
+    - 4chan greentexts
+    - Twitter posts
+    - Instagram reel meme compilations
+    - AI generated stories
+    - actual news pulled from some ass
+    - compilations of previously generated short videos
+    - trendy topics
+- Make prettier, more user accessible, easier installation
+- (Maybe) add windows support
+
+## **Disclaimer**
+This is **personal project**, not intended for production use<br/>
+**No collaborations**<br/>
+If you have problem running this, you have clear skill issue or you're trying to run this on Windows
