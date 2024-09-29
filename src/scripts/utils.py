@@ -11,6 +11,9 @@ def Error(*message):
 def Except(e, *message):
     print("[ EXCEPTION ]", *message, "\n  >>>", e)
 
-if __name__ == "__main__":
-    Error("This script is not meant to run standalone")
-    exit(0)
+def CheckMain():
+    if __name__ == "__main__":
+        Error("This script is not meant to run standalone")
+        exit(0)
+
+CheckMain()

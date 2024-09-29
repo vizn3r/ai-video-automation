@@ -1,9 +1,7 @@
 import whisper
-from utils import Error
+from utils import Error, CheckMain
 
-if __name__ == "__main__":
-    Error("This script is not meant to run standalone")
-    exit(0)
+CheckMain()
 
 def generate_subs(audio):
     model = whisper.load_model("base")

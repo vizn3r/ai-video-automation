@@ -8,14 +8,14 @@ from reddit import RedditPost
 from utils import Info, Error, Except, END
 from meta import VideoMeta
 from llm import RedditVideo
-import re
+from config import Config
 
 NAME = dt.datetime.now().strftime("%m-%d-%Y_%H-%M-%S")
 
 OUTPUT_DIR = os.environ["OUTPUT_DIR"] or "./"
 VIDEO_INPUT_DIR = os.environ["VIDEO_INPUT_DIR"] or "./"
-NUM_CPU = os.environ["NUM_CPU"] or 1
-OUT_WIDTH = int(os.environ["OUT_WIDTH"]) or 1080
+NUM_CPU = Config().num_cpu
+OUT_WIDTH = Config().out_width
 
 subs = [
     "stories",

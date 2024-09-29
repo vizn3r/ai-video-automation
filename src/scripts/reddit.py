@@ -1,12 +1,10 @@
 import praw
 import os
-from utils import Error, Info
+from utils import Error, Info, CheckMain
+
+CheckMain()
 
 POST_LIST = os.environ["POST_LIST"] or "./posts.txt"
-
-if __name__ == "__main__":
-    Error("This script is not meant to run standalone")
-    exit(0)
 
 reddit = praw.Reddit(
     client_id="xbTv9addKO-E9zhahVgi6Q",
@@ -28,11 +26,11 @@ def check_read(post):
     return False
 
 class RedditPost:
-    content: str = ""
-    title: str = ""
-    subreddit: str = ""
-    url: str = ""
-    nsfw: bool = False
+    content: str
+    title: str
+    subreddit: str
+    url: str
+    nsfw: bool
 
     def __init__(self, subreddit):
         Info("Source: r/" + subreddit)

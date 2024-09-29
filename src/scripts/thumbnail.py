@@ -1,10 +1,7 @@
 from PIL import Image
-from utils import Error
+from utils import Error, CheckMain
 
-if __name__ == "__main__":
-    Error("This script is not meant to run standalone")
-    exit(0)
-
+CheckMain()
 
 def generate_reddit_thumbnail(form):
     size = (0, 0)

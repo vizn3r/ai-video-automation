@@ -1,6 +1,9 @@
 import yt
 import os
 from meta import VideoMeta
+from utils import CheckMain
+
+CheckMain()
 
 OUTPUT_DIR = os.environ["OUTPUT_DIR"] or "./"
 

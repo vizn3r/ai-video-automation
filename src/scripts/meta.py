@@ -1,7 +1,8 @@
 import json
 import os
-from utils import Error
+from utils import Error, CheckMain
 
+CheckMain()
 
 OUTPUT_DIR = os.environ["OUTPUT_DIR"] or "./"
 
@@ -52,5 +53,4 @@ class VideoMeta:
 
 if __name__ == "__main__":
     Error("This script is not meant to run standalone")
-    #generate_video_meta("test", "test", 123.0, False, "test", "test", "test", ["test1", "test2", "test3"])
     exit(0)

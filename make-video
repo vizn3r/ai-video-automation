@@ -14,9 +14,7 @@ export POST_LIST="./src/scripts/posts.txt"
 export LLM_PATH="./media/llm/model.gguf"
 # YouTube client secret
 export YT_SECRET="./credentials.json"
-# Number of cores
-export NUM_CPU=16
-# Video width
-export OUT_WIDTH=1080
+# Config path
+export CONFIG_PATH="./config.json"
 
 python3 "./src/scripts/short.py"

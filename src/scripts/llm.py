@@ -3,12 +3,10 @@
 from llama_cpp import LLAMA_DEFAULT_SEED, LLAMA_POOLING_TYPE_UNSPECIFIED, LLAMA_ROPE_SCALING_TYPE_UNSPECIFIED, CreateChatCompletionResponse, Llama, LLAMA_SPLIT_MODE_LAYER
 from typing import Any
 import os
-from utils import Except, Info, Error, END
+from utils import Except, Info, Error, END, CheckMain
 import warnings
 
-if __name__ == "__main__":
-    Error("This script is not meant to run standalone")
-    exit(0)
+CheckMain()
 
 LLM_PATH = os.environ["LLM_PATH"] or "../../media/llm/model.gguf"
 

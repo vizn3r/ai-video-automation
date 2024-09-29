@@ -28,7 +28,7 @@ Because I was bored.
 - [ ] Generation of thumbnails and meta generation improvements
 - [ ] AI generated thumbnails
 
-### Add automatic upload support for:
+### Add automatic upload/download support for:
 - [ ] YouTube *(in development)*
 - [ ] TikTok
 - [ ] Instagram
