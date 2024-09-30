@@ -12,5 +12,9 @@ export VIDEO_INPUT_DIR="./media/videos/"
 export POST_LIST="./src/scripts/posts.txt"
 # LLM path
 export LLM_PATH="./media/llm/model.gguf"
+# YouTube client secret
+export YT_SECRET="./credentials.json"
+# Config path
+export CONFIG_PATH="./config.json"
 
 python3 "./src/scripts/$1"

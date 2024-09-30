@@ -1,4 +1,4 @@
-import yt
+import apps
 import os
 from meta import VideoMeta
 from utils import CheckMain
@@ -35,6 +35,6 @@ if __name__ == "__main__":
             print(f"Duration: {data.duration}/{data.form}")
             print("Source URL:", data.url)
             if input("Do you want to continue?[y/n]").lower().startswith("y"):
-                yt.upload_video(OUTPUT_DIR + video_metas[vid].removesuffix(".json") + ".mp4", data)
+                apps.Youtube.upload_video(OUTPUT_DIR + video_metas[vid].removesuffix(".json") + ".mp4", data)
         
     

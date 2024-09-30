@@ -29,18 +29,13 @@ subs = [
     "unresolvedmysteries",
     "maliciouscompliance",
     "askreddit",
-    "nostalgia",
     "offmychest",
     "relationship_advice",
     "talesfromthefrontdesk",
     "bestofredditorupdates",
-    "creepy",
-    "askwomen",
-    "askmen",
     "truecrime",
     "wholesomememes",
     "adventureswithpets",
-    "funny",
     "unpopularopinion",
     "prorevenge"
 ]
@@ -62,11 +57,11 @@ audio_path = generate_tts(reddit_data.content, NAME)
 audio = mp.AudioFileClip(audio_path)
 vid_form = ""
 if audio.duration >= 60:
-    Info("Audio is LONG - long form video")
+    Info(audio.duration, ">= 60: Long form video")
     vid_form = "long"
 else:
+    Info(audio.duration, "< 60: Short form video")
     vid_form = "short"
-    Info("Audio is SHORT - short form video")
 
 Info("Cropping video")
 rand_segment = random.randint(0, vid.duration - audio.duration + 0.5)
@@ -96,13 +91,13 @@ Info("Putting it all together")
 out = mp.CompositeVideoClip([short, subs.set_position(("center", "center"))]).set_duration(short.duration)
 out.write_videofile(OUTPUT_DIR + NAME + ".mp4", threads=NUM_CPU)
 
-Info("Generating video meta")
+Info("Generating video title")
 vid_title = RedditVideo.title(reddit_data.subreddit, reddit_data.title, reddit_data.content).removeprefix("\"").removesuffix("\"")
+Info("Generating video description")
 vid_desc = RedditVideo.description(reddit_data.subreddit, reddit_data.title, reddit_data.content).removeprefix("\"").removesuffix("\"")
-vid_tags_str = RedditVideo.tags(reddit_data.subreddit, reddit_data.title, reddit_data.content).removeprefix("\"").removesuffix("\"")
+Info("Generating video tags")
+vid_tags_str = RedditVideo.tags(reddit_data.subreddit, reddit_data.title, reddit_data.content).removeprefix("\"").removesuffix("\"").replace(" ", "").replace("\n", "").replace("\"", "")
 vid_tags = vid_tags_str.split(",")
-for tag in vid_tags:
-    tag = tag.removeprefix(" ").removesuffix("\n").removesuffix("\"")
 
 Info("Saving video meta")
 VideoMeta.generate(NAME, vid_form, out.duration, False, reddit_data.url, vid_title, vid_desc, vid_tags)

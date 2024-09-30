@@ -25,32 +25,33 @@ Because I was bored.
 
 ## Plans
 ### Core
-- [ ] Generation of thumbnails and meta generation improvements
-- [ ] AI generated thumbnails
+- Meta generation improvements
+- Generation of thumbnails
+- AI generated thumbnails
 
 ### Add automatic upload/download support for:
-- [ ] YouTube *(in development)*
-- [ ] TikTok
-- [ ] Instagram
-- [ ] Facebook
+- YouTube *(in development)*
+- TikTok
+- Instagram
+- Facebook
 
 ### Generate video content with:
-- [x] Reddit
-- [ ] Reddit posts with comments
-- [ ] 4chan greentexts
-- [ ] Twitter posts
-- [ ] Instagram reel meme compilations
-- [ ] AI generated stories
-- [ ] actual news pulled from some ass
-- [ ] compilations of previously generated short videos
-- [ ] trendy topics
+- Reddit
+- Reddit posts with comments
+- 4chan greentexts
+- Twitter posts
+- Instagram reel meme compilations
+- AI generated stories
+- actual news pulled from some ass
+- compilations of previously generated short videos
+- trendy topics
 
 ### User
-- [ ] Make server/client
-- [ ] Make prettier, more user accessible, easier installation
-- [ ] Add option to not use AI
-- [ ] Select if user wants to generate short and/or long form videos
-- [ ] (Maybe) add windows support
+- Make server/client
+- Make prettier, more user accessible, easier installation
+- Add option to not use AI
+- Select if user wants to generate short and/or long form videos
+- (Maybe) add windows support
 
 ## **Disclaimer**
 This is **personal project**, not intended for production use<br/>

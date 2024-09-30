@@ -35,7 +35,7 @@ class RedditPost:
     def __init__(self, subreddit):
         Info("Source: r/" + subreddit)
         for submission in reddit.subreddit(subreddit).top(time_filter="day", limit=50):
-            if not(check_read(submission.title) or submission.over_18):
+            if not(check_read(submission.title) or submission.over_18 or not submission.is_self):
                 mark_read(submission.title)
                 self.content = submission.selftext
                 self.title = submission.title

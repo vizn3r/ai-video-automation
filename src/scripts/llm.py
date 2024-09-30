@@ -5,6 +5,8 @@ from typing import Any
 import os
 from utils import Except, Info, Error, END, CheckMain
 import warnings
+from config import Config
+import random
 
 CheckMain()
 
@@ -66,6 +68,11 @@ class LLMContext:
         Info("Loaded model '", self.params["model_name"], "'")
         return self
 
+    def random_seed(length=10):
+        first_digit = random.randint(1, 9)
+        other_digits = ''.join(str(random.randint(0, 9)) for _ in range(length - 1))
+        return int(str(first_digit) + other_digits)
+
     def chat(self) -> CreateChatCompletionResponse | None:
         if self.llama == None:
             return None
@@ -122,10 +129,10 @@ class LLMContext:
         "use_nmap": True,
         "use_mlock": False,
         "kv_overrides": None,
-        "seed": LLAMA_DEFAULT_SEED,
+        "seed": random_seed(),
         "ctx_size": 2096, #n_ctx
         "batch_size": 512, #n_batch
-        "threads": 4, #n_threads
+        "threads": Config().num_cpu, #n_threads
         "threads_batch": None, #n_threads_batch
         "rope_scaling_type": LLAMA_ROPE_SCALING_TYPE_UNSPECIFIED,
         "pooling_type": LLAMA_POOLING_TYPE_UNSPECIFIED,
@@ -157,9 +164,9 @@ class LLMContext:
         "function_call": None,
         "tools": None,
         "tool_choice": None,
-        "temperature": 0.7,
-        "top_p": 0.95,
-        "top_k": 40,
+        "temperature": 1.0,
+        "top_p": 0.7,
+        "top_k": 10,
         "min_p": 0.05,
         "typical_p": 1.0,
         "stream": False,
@@ -167,9 +174,9 @@ class LLMContext:
         "msg_seed": None,
         "response_format": None,
         "max_tokens": None,
-        "presence_penalty": 0.0,
-        "frequency_penalty": 0.0,
-        "repeat_penalty": 1.1,
+        "presence_penalty": 0.6,
+        "frequency_penalty": 0.5,
+        "repeat_penalty": 1.3,
         "tfs_z": 1.0,
         "mirostat_mode": 0,
         "mirostat_tau": 5.0,
@@ -190,20 +197,21 @@ class RedditVideo:
         message = [
             {
                 "role": "user",
-                "content": f"Generate a catchy, SEO-optimized, and clickbait-style video title based on the subreddit '{subreddit}', post title '{post_title}', and post content '{post_content}'. The title must be engaging and under 100 characters in length. Respond with ONLY one title and no additional text."
+                "content": f"Generate a catchy, Search Engine Optimised and clickbait-style video title based on the subreddit '{subreddit}', post title '{post_title}', and post content '{post_content}'. The title must be engaging. It **HAS TO BE UNDER 100 characters in length**. Respond with ONLY one title and no additional text."
             }
         ]
         llm.set_param("messages", message)
+        llm.set_param("max_tokens", 50)
         llm.set_param("ctx_size", len(message[0]["content"]) + llm.params["ctx_size"])
         out = llm.chat()
         if out == None or out["choices"].__len__() == 0 or out["choices"][0]["message"] == None:
             return "There is no response"
         msg = out["choices"][0]["message"]["content"]
+        Info("Video title:", END, msg)
         if len(msg) >= 100:
             Info("Video title is too long, redoing it recursively")
             llm.llama.close()
             msg = RedditVideo.title(subreddit, post_title, post_content)
-        Info("Video title:", END, msg)
         llm.llama.close()
         return msg
 
@@ -213,7 +221,7 @@ class RedditVideo:
         message = [
             {
                 "role": "user",
-                "content": f"Generate an engaging video description using the subreddit '{subreddit}', post title '{post_title}', and post content '{post_content}'. Respond ONLY with the video description and nothing else. Do not include a title."
+                "content": f"Generate a Search Engine Optimized video description using the subreddit '{subreddit}', post title '{post_title}', and post content '{post_content}'. Respond ONLY with the video description and nothing else. Do not include a title."
             }
         ]
         llm.set_param("messages", message)
@@ -232,7 +240,7 @@ class RedditVideo:
         message = [
             {
                 "role": "user",
-                "content": f"Generate video tags based on the subreddit '{subreddit}', post title '{post_title}', and post content '{post_content}'. Respond ONLY with the video tags in one line, separated by commas, and **without any hashtags, spaces, or whitespace**. Include tags related to Reddit and the title of the subreddit. Generate AT LEAST 50 tags. Do not respond with anything else."
+                "content": f"Generate Search Engine Optimized video tags based on the subreddit '{subreddit}', post title '{post_title}', and post content '{post_content}'. Respond ONLY with the video tags in one line, separated by commas, and **without any hashtags, spaces, or whitespace**. Include tags related to Reddit and the title of the subreddit. Generate AT LEAST 50 tags. Do not respond with anything else."
             }
         ]
         llm.set_param("messages", message)
