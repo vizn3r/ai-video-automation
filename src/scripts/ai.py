@@ -7,12 +7,19 @@ from utils import Except, Info, Error, END, CheckMain
 import warnings
 from config import Config
 import random
+import spacy
+from collections import Counter
 
 CheckMain()
 
 LLM_PATH = os.environ["LLM_PATH"] or "../../media/llm/model.gguf"
 
 warnings.filterwarnings("ignore", category=FutureWarning)
+
+def random_seed(length=9):
+    first_digit = random.randint(1, 9)
+    other_digits = ''.join(str(random.randint(0, 9)) for _ in range(length - 1))
+    return int(str(first_digit) + other_digits)
 
 class LLMContext:
     def __init__(self) -> None:
@@ -68,10 +75,6 @@ class LLMContext:
         Info("Loaded model '", self.params["model_name"], "'")
         return self
 
-    def random_seed(length=10):
-        first_digit = random.randint(1, 9)
-        other_digits = ''.join(str(random.randint(0, 9)) for _ in range(length - 1))
-        return int(str(first_digit) + other_digits)
 
     def chat(self) -> CreateChatCompletionResponse | None:
         if self.llama == None:
@@ -129,7 +132,7 @@ class LLMContext:
         "use_nmap": True,
         "use_mlock": False,
         "kv_overrides": None,
-        "seed": random_seed(),
+        "seed": LLAMA_DEFAULT_SEED,
         "ctx_size": 2096, #n_ctx
         "batch_size": 512, #n_batch
         "threads": Config().num_cpu, #n_threads
@@ -193,16 +196,17 @@ class LLMContext:
 class RedditVideo:
     def title(subreddit, post_title, post_content):
         llm = LLMContext()
-        llm.load_model()
+        Info("Seed:", llm.params["seed"])
         message = [
             {
                 "role": "user",
-                "content": f"Generate a catchy, Search Engine Optimised and clickbait-style video title based on the subreddit '{subreddit}', post title '{post_title}', and post content '{post_content}'. The title must be engaging. It **HAS TO BE UNDER 100 characters in length**. Respond with ONLY one title and no additional text."
+                "content": f"Create a short and Search Engine Optimised video title based on the subreddit '{subreddit}', post title '{post_title}', and post content '{post_content}'. The title must be engaging. It **HAS TO BE UNDER 100 characters in length**. Respond with ONLY one title and no additional text."
             }
         ]
         llm.set_param("messages", message)
-        llm.set_param("max_tokens", 50)
+        llm.set_param("seed", random_seed())
         llm.set_param("ctx_size", len(message[0]["content"]) + llm.params["ctx_size"])
+        llm.load_model()
         out = llm.chat()
         if out == None or out["choices"].__len__() == 0 or out["choices"][0]["message"] == None:
             return "There is no response"
@@ -221,7 +225,7 @@ class RedditVideo:
         message = [
             {
                 "role": "user",
-                "content": f"Generate a Search Engine Optimized video description using the subreddit '{subreddit}', post title '{post_title}', and post content '{post_content}'. Respond ONLY with the video description and nothing else. Do not include a title."
+                "content": f"Create a Search Engine Optimized description for story named '{post_title}' and the story '{post_content}'. Respond ONLY with the video description and nothing else. Do not include a title."
             }
         ]
         llm.set_param("messages", message)
@@ -234,13 +238,13 @@ class RedditVideo:
         llm.llama.close()
         return msg
 
-    def tags(subreddit, post_title, post_content):
+    def keywords(subreddit, post_title, post_content):
         llm = LLMContext()
         llm.load_model()
         message = [
             {
                 "role": "user",
-                "content": f"Generate Search Engine Optimized video tags based on the subreddit '{subreddit}', post title '{post_title}', and post content '{post_content}'. Respond ONLY with the video tags in one line, separated by commas, and **without any hashtags, spaces, or whitespace**. Include tags related to Reddit and the title of the subreddit. Generate AT LEAST 50 tags. Do not respond with anything else."
+                "content": f"Create Search Engine Optimized, YouTube Search Algorithm optimized, keywords from story with title '{post_title}' and the story '{post_content}'. Respond ONLY with the keywords in one line, separated by commas. Include keywords related to Reddit YouTube videos and the title. Generate AT LEAST 200 keywords. Do not respond with anything else."
             }
         ]
         llm.set_param("messages", message)
@@ -249,10 +253,24 @@ class RedditVideo:
         if out == None or out["choices"].__len__() == 0 or out["choices"][0]["message"] == None:
             return "There is no response"
         msg = out["choices"][0]["message"]["content"]
-        Info("Video tags:", END, msg)
+        Info("Video keywords:", END, msg)
         llm.llama.close()
         return msg
 
+    def spacy_tags(text, max=50):
+        nlp = spacy.load("en_core_web_sm")
+        doc = nlp(text)
+        tags = [token.text for token in doc if token.pos_ in ["NOUN", "PROPN"]]
+        tag_freq = Counter(tags)
+        common_tags = tag_freq.most_common(max)
+        return [tag for tag, freq in common_tags]
+
+    def tags(subreddit, post_title, post_content):
+        keywords = RedditVideo.keywords(subreddit, post_title, post_content)
+        tags = RedditVideo.spacy_tags(keywords)
+        Info("Video tags:", tags)
+        return tags
+        
 # data = get_hot_post_data("stories")
 # generate_reddit_video_title(data["subreddit"], data["title"], data["content"])
 # generate_reddit_video_description(data["subreddit"], data["title"], data["content"])

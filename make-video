@@ -13,7 +13,9 @@ export POST_LIST="./src/scripts/posts.txt"
 # LLM path
 export LLM_PATH="./media/llm/model.gguf"
 # YouTube client secret
-export YT_SECRET="./credentials.json"
+export YT_SECRET="./youtube_credentials.json"
+# Instagram session
+export IG_SECRET="./instagram_credentials.json"
 # Config path
 export CONFIG_PATH="./config.json"
 

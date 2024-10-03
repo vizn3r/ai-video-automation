@@ -4,10 +4,10 @@ import os
 import datetime as dt
 from tts import generate_tts
 from subtitles import generate_subs
-from reddit import RedditPost
+from apps import Reddit
 from utils import Info, Error, Except, END
 from meta import VideoMeta
-from llm import RedditVideo
+from ai import RedditVideo
 from config import Config
 
 NAME = dt.datetime.now().strftime("%m-%d-%Y_%H-%M-%S")
@@ -22,7 +22,6 @@ subs = [
     "confessions",
     "trueoffmychest",
     "iama",
-    "justnofamily",
     "amitheasshole",
     "relationship_advice",
     "truestory",
@@ -32,16 +31,11 @@ subs = [
     "offmychest",
     "relationship_advice",
     "talesfromthefrontdesk",
-    "bestofredditorupdates",
-    "truecrime",
-    "wholesomememes",
-    "adventureswithpets",
     "unpopularopinion",
-    "prorevenge"
 ]
 
 Info("Loading Reddit data")
-reddit_data = RedditPost(subs[random.randint(0, len(subs))])
+reddit_data = Reddit().get_post(subs[random.randint(0, len(subs))])
 
 Info("Loading video")
 videos = [f for f in os.listdir(VIDEO_INPUT_DIR) if os.path.isfile(os.path.join(VIDEO_INPUT_DIR, f)) and not f.startswith("!put_background_videos_here")]
@@ -94,10 +88,9 @@ out.write_videofile(OUTPUT_DIR + NAME + ".mp4", threads=NUM_CPU)
 Info("Generating video title")
 vid_title = RedditVideo.title(reddit_data.subreddit, reddit_data.title, reddit_data.content).removeprefix("\"").removesuffix("\"")
 Info("Generating video description")
-vid_desc = RedditVideo.description(reddit_data.subreddit, reddit_data.title, reddit_data.content).removeprefix("\"").removesuffix("\"")
+vid_desc = RedditVideo.description(reddit_data.subreddit, reddit_data.title, reddit_data.content).replace("\n", "").replace("\"", "")
 Info("Generating video tags")
-vid_tags_str = RedditVideo.tags(reddit_data.subreddit, reddit_data.title, reddit_data.content).removeprefix("\"").removesuffix("\"").replace(" ", "").replace("\n", "").replace("\"", "")
-vid_tags = vid_tags_str.split(",")
+vid_tags = RedditVideo.tags(reddit_data.subreddit, reddit_data.title, reddit_data.content)
 
 Info("Saving video meta")
 VideoMeta.generate(NAME, vid_form, out.duration, False, reddit_data.url, vid_title, vid_desc, vid_tags)
@@ -106,6 +99,6 @@ Info("Done!")
 Info("File name:" + END, NAME)
 Info("Title:" + END, vid_title)
 Info("Description:" + END, vid_desc)
-Info("Tags:" + END, vid_tags_str)
+Info("Tags:" + END, vid_tags)
 Info("Duration:" +END, out.duration, "/", vid_form)
 Info("Post link:" + END, reddit_data.url)

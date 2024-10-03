@@ -20,19 +20,19 @@ Because I was bored.
 - Check `make-video` script options, adjust to your needs
 - Run `./make-video`
     - If this doesn't run, you're either on Windows (this is made on WSL, might add Win script later), or
-    - Don't have permissions to execute, to fix this run `sudo chmod +x make-short`
+    - Don't have permissions to execute, to fix this run `sudo chmod +x make-video`
 - Watch the magic happen
 
 ## Plans
 ### Core
-- Meta generation improvements
+- Meta generation improvements *(still improving)*
 - Generation of thumbnails
 - AI generated thumbnails
 
 ### Add automatic upload/download support for:
 - YouTube *(in development)*
 - TikTok
-- Instagram
+- Instagram *(in development)*
 - Facebook
 
 ### Generate video content with:
