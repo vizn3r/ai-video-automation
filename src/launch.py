@@ -40,5 +40,5 @@ if environ["MODE"] == "TESTING":
 
 else:
     Info("Launching 'short.py'")
-    from scripts.short import main
+    from scripts.video import main
     main()

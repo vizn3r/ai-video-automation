@@ -20,22 +20,7 @@ VIDEO_INPUT_DIR = os.environ["VIDEO_INPUT_DIR"]
 NUM_CPU = Config().num_cpu
 OUT_WIDTH = Config().out_width
 
-SUBS = [
-    "stories",
-    "confessions",
-    "trueoffmychest",
-    "iama",
-    "amitheasshole",
-    "relationship_advice",
-    "truestory",
-    "unresolvedmysteries",
-    "maliciouscompliance",
-    "askreddit",
-    "offmychest",
-    "relationship_advice",
-    "talesfromthefrontdesk",
-    "unpopularopinion",
-]
+SUBS = Config().reddit_subs
 
 def main():
     Info("Loading Reddit data")

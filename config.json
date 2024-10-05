@@ -3,5 +3,23 @@
     "video": {
         "out_width": 1080,
         "tags": []
+    },
+    "reddit": {
+        "subs": [
+            "stories",
+            "confessions",
+            "trueoffmychest",
+            "iama",
+            "amitheasshole",
+            "relationship_advice",
+            "truestory",
+            "unresolvedmysteries",
+            "maliciouscompliance",
+            "askreddit",
+            "offmychest",
+            "relationship_advice",
+            "talesfromthefrontdesk",
+            "unpopularopinion"
+        ]
     }
 }

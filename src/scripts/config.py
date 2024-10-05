@@ -10,6 +10,7 @@ class Config:
     num_cpu: int
     out_width: int
     video_tags: list[str]
+    rerddit_subs: list[str]
 
     __loaded: bool = False
     
@@ -25,8 +26,11 @@ class Config:
             data = json.load(f)
             
             self.num_cpu = data["num_cpu"]
+
             self.out_width = data["video"]["out_width"]
             self.video_tags = data["video"]["tags"]
+
+            self.rerddit_subs = data["reddit"]["subs"]
 
             self.__loaded = True
             f.close()
