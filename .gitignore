@@ -4,6 +4,8 @@ posts.txt
 **/*.mp3
 *credentials.json
 conf.json
+reqs
+updt
 
 __pycache__
 venv
