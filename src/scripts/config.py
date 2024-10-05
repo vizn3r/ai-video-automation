@@ -10,7 +10,7 @@ class Config:
     num_cpu: int
     out_width: int
     video_tags: list[str]
-    rerddit_subs: list[str]
+    reddit_subs: list[str]
 
     __loaded: bool = False
     
@@ -30,7 +30,7 @@ class Config:
             self.out_width = data["video"]["out_width"]
             self.video_tags = data["video"]["tags"]
 
-            self.rerddit_subs = data["reddit"]["subs"]
+            self.reddit_subs = data["reddit"]["subs"]
 
             self.__loaded = True
             f.close()
