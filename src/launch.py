@@ -23,6 +23,7 @@ if not path.exists(environ["LLM_PATH"]):
     Error("Invalid 'LLM_PATH' path.\nCheck if you have downloaded a LLM model")
     inp = input("Do you want to install LLM automatically? [Y/n]:")
     if inp == "" or inp.lower().startswith("y"):
+        # TODO: add progressbar
         from urllib.request import urlretrieve
         Info("Downloading 'TheBloke/Mistral-7B-Instruct-v0.2-GGUF' from 'https://huggingface.co/TheBloke/Mistral-7B-Instruct-v0.2-GGUF/blob/main/mistral-7b-instruct-v0.2.Q4_K_M.gguf'")
         urlretrieve("https://huggingface.co/TheBloke/Mistral-7B-Instruct-v0.2-GGUF/resolve/main/mistral-7b-instruct-v0.2.Q4_K_M.gguf?download=true", environ["LLM_PATH"])
@@ -31,15 +32,14 @@ if not path.exists(environ["LLM_PATH"]):
         exit(0)
         
 if not path.exists(environ["YT_SECRET"]):
-    Error("Invalid 'YT_SECRET' path")
-    exit(0)
+    Error("Invalid 'YT_SECRET' path. \nYou won't be able to use CLI uploading")
 
 if not path.exists(environ["IG_SECRET"]):
-    Error("Invalid 'IG_SECRET' path")
-    exit(0)
+    # Error("Invalid 'IG_SECRET' path. ")
+    pass
 
 if not path.exists(environ["CONFIG_PATH"]):
-    Error("Invalid 'CONFIG_PATH' path")
+    Error("Invalid 'CONFIG_PATH' path. \nCopy 'example_config.json' into 'conf.json' and modify to your needs.")
     exit(0)
 
 if environ["MODE"] == "TESTING":
