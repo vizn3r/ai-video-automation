@@ -32,14 +32,14 @@ if not path.exists(environ["LLM_PATH"]):
         exit(0)
         
 if not path.exists(environ["YT_SECRET"]):
-    Error("Invalid 'YT_SECRET' path. \nYou won't be able to use CLI uploading")
+    Error("Invalid 'YT_SECRET' path. You won't be able to use CLI uploading")
 
 if not path.exists(environ["IG_SECRET"]):
     # Error("Invalid 'IG_SECRET' path. ")
     pass
 
 if not path.exists(environ["CONFIG_PATH"]):
-    Error("Invalid 'CONFIG_PATH' path. \nCopy 'example_config.json' into 'conf.json' and modify to your needs.")
+    Error("Invalid 'CONFIG_PATH' path. Copy 'example_config.json' into 'conf.json' and modify to your needs.")
     exit(0)
 
 if environ["MODE"] == "TESTING":
