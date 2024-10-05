@@ -75,7 +75,6 @@ class LLMContext:
         Info("Loaded model '", self.params["model_name"], "'")
         return self
 
-
     def chat(self) -> CreateChatCompletionResponse | None:
         if self.llama == None:
             return None
