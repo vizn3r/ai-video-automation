@@ -3,7 +3,7 @@ out/**/*.*
 posts.txt
 **/*.mp3
 *credentials.json
-config.json
+conf.json
 
 __pycache__
 venv
