@@ -1,12 +1,9 @@
-# Media ignore
 media/**/*.*
 out/**/*.*
 posts.txt
 **/*.mp3
+*credentials.json
+config.json
 
-# Bloat ignore
 __pycache__
 venv
-
-# Creds ignore
-*credentials.json
