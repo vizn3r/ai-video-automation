@@ -1,3 +1,14 @@
+Shield: [![CC BY-NC 4.0][cc-by-nc-shield]][cc-by-nc]
+
+This work is licensed under a
+[Creative Commons Attribution-NonCommercial 4.0 International License][cc-by-nc].
+
+[![CC BY-NC 4.0][cc-by-nc-image]][cc-by-nc]
+
+[cc-by-nc]: https://creativecommons.org/licenses/by-nc/4.0/
+[cc-by-nc-image]: https://licensebuttons.net/l/by-nc/4.0/88x31.png
+[cc-by-nc-shield]: https://img.shields.io/badge/License-CC%20BY--NC%204.0-lightgrey.svg
+
 # ✨AI powered video automation tool 🤖
 - 🔊 Text-to-speech for generating video commentary
 - 💬 Speech-to-text for generating subtitles
@@ -23,6 +34,18 @@ Because I was bored.
     - Don't have permissions to execute, to fix this run `sudo chmod +x make-video`
 - Watch the magic happen
 
+## Current features
+### Make a video from a reddit post
+- Pulls text from top posts from random sub
+- Makes video commentary using TTS
+- Cuts random segment from randomly picked background video
+- Makes subtitles using STT
+- Generates meta (title, description, tags) using LLM and NLP
+
+### Upload to YouTube from terminal (rate limit)
+- Lists generated videos
+- Automatically uploads video with all the generated meta
+
 ## Plans
 ### Core
 - Meta generation improvements *(still improving)*
@@ -30,14 +53,13 @@ Because I was bored.
 - AI generated thumbnails
 
 ### Add automatic upload/download support for:
-- YouTube *(in development)*
+- YouTube *(download)*
 - TikTok
-- Instagram *(in development)*
+- Instagram
 - Facebook
 
 ### Generate video content with:
-- Reddit
-- Reddit posts with comments
+- Reddit posts with comments *(like r/askreddit)*
 - 4chan greentexts
 - Twitter posts
 - Instagram reel meme compilations
@@ -53,7 +75,7 @@ Because I was bored.
 - Select if user wants to generate short and/or long form videos
 - (Maybe) add windows support
 
-## **Disclaimer**
-This is **personal project**, not intended for production use<br/>
-**No collaborations**<br/>
-If you have problem running this, you have clear skill issue or you're trying to run this on Windows
+# **Disclaimer**
+### This is **personal project**, not intended for production use
+### **No collaborations**
+### If you have problem running this, you have clear skill issue or you're trying to run this on Windows
