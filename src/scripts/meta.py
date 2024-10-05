@@ -1,10 +1,12 @@
 import json
 import os
-from utils import Error, CheckMain
+from scripts.utils import Error, CheckMain
+from scripts.config import Config
 
 CheckMain()
 
 OUTPUT_DIR = os.environ["OUTPUT_DIR"] or "./"
+VIDEO_TAGS = Config().video_tags
 
 class VideoMeta:
     name: str
@@ -31,6 +33,8 @@ class VideoMeta:
             self.video_title = data["video"]["title"].removesuffix("\n")
             self.video_description = data["video"]["description"].removesuffix("\n")
             self.video_tags = data["video"]["tags"]
+
+            self.video_tags = self.video_tags.append(VIDEO_TAGS)
             f.close()
         return
 

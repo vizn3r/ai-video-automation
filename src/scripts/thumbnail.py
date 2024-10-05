@@ -1,5 +1,5 @@
 from PIL import Image
-from utils import Error, CheckMain
+from scripts.utils import Error, CheckMain
 
 CheckMain()
 

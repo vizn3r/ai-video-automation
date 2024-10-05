@@ -1,22 +1,6 @@
 #!/bin/bash
-source "./venv/bin/activate"
 
-## CONFIGURATION
-# ImageMagick binary
-export IMAGEMAGICK_BINARY="/mnt/c/Program Files/ImageMagick-7.1.1-Q16-HDRI/magick.exe"
-# Output directory
-export OUTPUT_DIR="./out/"
-# Video input directory
-export VIDEO_INPUT_DIR="./media/videos/"
-# Post list
-export POST_LIST="./src/scripts/posts.txt"
-# LLM path
-export LLM_PATH="./media/llm/model.gguf"
-# YouTube client secret
-export YT_SECRET="./credentials.json"
-# Number of cores
-export NUM_CPU=16
-# Video width
-export OUT_WIDTH=1080
+source ./config
+source ./venv/bin/activate
 
-python3 "./src/scripts/upload.py"
+python3 ./src/scripts/upload.py

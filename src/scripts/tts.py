@@ -1,7 +1,7 @@
 import torch
 import os
 from TTS.api import TTS
-from utils import Error, CheckMain
+from scripts.utils import Error, CheckMain
 import warnings
 
 CheckMain()

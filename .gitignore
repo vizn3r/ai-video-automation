@@ -10,5 +10,3 @@ venv
 
 # Creds ignore
 *credentials.json
-
-.gitignore

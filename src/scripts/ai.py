@@ -3,9 +3,9 @@
 from llama_cpp import LLAMA_DEFAULT_SEED, LLAMA_POOLING_TYPE_UNSPECIFIED, LLAMA_ROPE_SCALING_TYPE_UNSPECIFIED, CreateChatCompletionResponse, Llama, LLAMA_SPLIT_MODE_LAYER
 from typing import Any
 import os
-from utils import Except, Info, Error, END, CheckMain
+from scripts.utils import Except, Info, Error, END, CheckMain
 import warnings
-from config import Config
+from scripts.config import Config
 import random
 import spacy
 from collections import Counter
@@ -193,6 +193,9 @@ class LLMContext:
 
         
 class RedditVideo:
+    def __init__(self) -> None:
+        pass
+
     def title(subreddit, post_title, post_content):
         llm = LLMContext()
         Info("Seed:", llm.params["seed"])
@@ -267,57 +270,31 @@ class RedditVideo:
     def tags(subreddit, post_title, post_content):
         keywords = RedditVideo.keywords(subreddit, post_title, post_content)
         tags = RedditVideo.spacy_tags(keywords)
+        tags = [s for s in tags if s.isalpha()]
         Info("Video tags:", tags)
         return tags
-        
-# data = get_hot_post_data("stories")
-# generate_reddit_video_title(data["subreddit"], data["title"], data["content"])
-# generate_reddit_video_description(data["subreddit"], data["title"], data["content"])
-# generate_reddit_video_tags(data["subreddit"], data["title"], data["content"])
+    
+class Story:
+    def __init__(self) -> None:
+        pass
 
-# app = Flask(__name__)
-# 
-# @app.get("/")
-# def get():
-#     llms = os.listdir("../models/llm/")
-#     res = {
-#         "models": llms
-#     }
-#     return json.dumps(res)
-# 
-# @app.post("/")
-# def post():
-#     req = request.get_json()
-#     for param in llm.params:
-#         try:
-#             llm.params[param] = req[param]
-#         except:
-#             pass
-#     if llm.llama == None and llm.params["model_name"] != "":
-#         llm.load_model()
-# 
-#     # completion system
-#     m = llm.params["messages"]
-#     if m == None:
-#         return "ok"
-#     # for single message and single response
-#     if isinstance(m, str):
-#         llm.params["messages"] = [{ "role": "user", "content": m }]
-#         out = llm.chat()
-#         if out == None or out["choices"].__len__() == 0 or out["choices"][0]["message"] == None:
-#             return "There is no response"
-#         msg = out["choices"][0]["message"]["content"]
-#         if out == None or msg == None:
-#             return "there is no response"
-#         else:
-#             return msg
-#     # for chat history
-#     llm.params["history"] = llm.params["history"] + m
-#     llm.params["messages"] = llm.params["history"]
-#     out = llm.chat()
-#     if out == None:
-#         return "there was no response"
-#     llm.params["history"] += [out["choices"][0]['message']]
-#     return out
-# 
-# app.run(port=8080)
+    def generate(theme, lenght="short"):
+        llm = LLMContext()
+        llm.load_model()
+        message = [
+            {
+                "role": "user",
+                "message": f"Create a story \"{theme}\". Make the story {lenght}"
+            }
+        ]
+        llm.set_param("messages", message)
+        llm.set_param("ctx_size", len(message[0]["content"]) + llm.params["ctx_size"])
+        out = llm.chat()
+        if out == None or out["choices"].__len__() == 0 or out["choices"][0]["message"] == None:
+            return "There is no response"
+        msg = out["choices"][0]["message"]["content"]
+        Info("Video description:", END, msg)
+        llm.llama.close()
+        return msg
+
+    

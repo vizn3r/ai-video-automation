@@ -1,7 +1,7 @@
 import apps
 import os
-from meta import VideoMeta
-from utils import CheckMain
+from scripts.meta import VideoMeta
+from scripts.utils import CheckMain
 
 CheckMain()
 

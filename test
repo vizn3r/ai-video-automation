@@ -1,20 +1,9 @@
 #!/bin/bash
-source "./venv/bin/activate"
+source ./venv/bin/activate
+source ./config
 
-## CONFIGURATION
-# ImageMagick binary
-export IMAGEMAGICK_BINARY="/mnt/c/Program Files/ImageMagick-7.1.1-Q16-HDRI/magick.exe"
-# Output directory
-export OUTPUT_DIR="./out/"
-# Video input directory
-export VIDEO_INPUT_DIR="./media/videos/"
-# Post list
-export POST_LIST="./src/scripts/posts.txt"
-# LLM path
-export LLM_PATH="./media/llm/model.gguf"
-# YouTube client secret
-export YT_SECRET="./credentials.json"
-# Config path
-export CONFIG_PATH="./config.json"
+# Testing purposes
+export MODE="TESTING"
 
-python3 "./src/scripts/$1"
+python3 ./src/launch.py
+python3 ./src/$1.py

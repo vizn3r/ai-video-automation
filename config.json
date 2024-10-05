@@ -1,6 +1,7 @@
 {
     "num_cpu": 16,
     "video": {
-        "out_width": 1080
+        "out_width": 1080,
+        "tags": []
     }
 }

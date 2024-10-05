@@ -1,9 +1,9 @@
 import whisper
-from utils import Error, CheckMain
+from scripts.utils import Error, CheckMain
 
 CheckMain()
 
-def generate_subs(audio):
+def generate(audio):
     model = whisper.load_model("base")
     res = model.transcribe(audio, verbose=False, word_timestamps=True)
     return res

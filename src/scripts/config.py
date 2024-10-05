@@ -1,6 +1,6 @@
 import os
 import json
-from utils import Error, CheckMain
+from scripts.utils import Error, CheckMain
 
 CheckMain()
 
@@ -9,6 +9,7 @@ CONFIG_PATH = os.environ["CONFIG_PATH"] or "./config.json"
 class Config:
     num_cpu: int
     out_width: int
+    video_tags: list[str]
 
     __loaded: bool = False
     
@@ -25,6 +26,7 @@ class Config:
             
             self.num_cpu = data["num_cpu"]
             self.out_width = data["video"]["out_width"]
+            self.video_tags = data["video"]["tags"]
 
             self.__loaded = True
             f.close()

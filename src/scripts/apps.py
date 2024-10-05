@@ -2,11 +2,11 @@ import os
 import google_auth_oauthlib.flow
 import googleapiclient.discovery
 import googleapiclient.errors
-from utils import Error, CheckMain, Info
-from meta import VideoMeta
+from scripts.utils import Error, CheckMain, Info
+from scripts.meta import VideoMeta
 import praw
 import os
-from instascrape import *
+import instascrape as ig
 
 CheckMain()
 
@@ -66,7 +66,7 @@ class Instagram:
             return data
 
     def get_new_reels(account, amount=3):
-        data = Profile("https://instagram.com/" + account + "/").scrape()
+        data = ig.Profile("https://instagram.com/" + account + "/").scrape()
         posts = data.get_recent_posts(amount)
         return posts
     
