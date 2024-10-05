@@ -16,7 +16,7 @@ export YT_SECRET="./youtube_credentials.json"
 # Instagram session
 export IG_SECRET="./instagram_credentials.json"
 # Config path
-export CONFIG_PATH="./config.json"
+export CONFIG_PATH="./conf.json"
 
 # DO NOT CHANGE
 export MODE=""

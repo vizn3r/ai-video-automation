@@ -15,7 +15,9 @@ if not path.exists(environ["VIDEO_INPUT_DIR"]):
     exit(0)
 
 if not path.exists(environ["POST_LIST"]):
-    Error("Invalid 'POST_LIST' path")
+    Info("Creating new 'POST_LIST' file: '" + environ["POST_LIST"] + "'")
+    f = open(environ["POST_LIST"], "w")
+    f.close()
     exit(0)
 
 if not path.exists(environ["LLM_PATH"]):
