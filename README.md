@@ -74,7 +74,7 @@ Because I was bored.
 ### This is **personal project**, not intended for production use
 ### **No collaborations**
 ### If you have problem running this, you have clear skill issue or you're trying to run this on Windows
-
+<br/><br/>
 This work is licensed under a
 [Creative Commons Attribution-NonCommercial 4.0 International License][cc-by-nc].
 
